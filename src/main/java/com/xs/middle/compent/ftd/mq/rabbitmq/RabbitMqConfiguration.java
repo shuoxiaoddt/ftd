@@ -1,6 +1,7 @@
 package com.xs.middle.compent.ftd.mq.rabbitmq;
 
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -9,6 +10,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
 /**
  * @author xiaos
  * @date 2019/9/2 17:54
@@ -16,24 +20,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfiguration {
 
-    @Bean
-    public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory("localhost");
-    }
+    @Resource
+    private ConnectionFactory connectionFactory;
 
-    @Bean
-    public AmqpAdmin amqpAdmin() {
-        return new RabbitAdmin(connectionFactory());
-    }
+    private RabbitAdmin rabbitAdmin;
 
-    @Bean
-    public RabbitTemplate rabbitTemplate() {
-        return new RabbitTemplate(connectionFactory());
+    @PostConstruct
+    protected void init(){
+        rabbitAdmin = new RabbitAdmin(connectionFactory);
     }
-
-    @Bean
-    public Queue myQueue() {
-        return new Queue("myqueue");
-    }
-
 }
