@@ -7,6 +7,6 @@ package com.xs.middle.compent.ftd.constant;
  */
 public interface QueueConstant {
 
-    String BIG_HANDSOME_QUEUE = "big-handsome-queue";
+    String DEFAULR_EXCHANGE = "default_exchange";
 
 }
