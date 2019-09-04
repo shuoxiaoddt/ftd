@@ -16,8 +16,4 @@ public class QueueWarpper {
     private Queue deadQueue;
 
     private RabbitMqExchangeEnum exchangeEnum;
-
-    private long ttl;
-
-    private long deadLetterTtl;
 }

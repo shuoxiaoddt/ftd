@@ -9,21 +9,20 @@ import lombok.Getter;
  */
 public enum  RabbitMqQueueEnum {
 
-    BIG_HANDSOME_QUEUE("big-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,60000L);
+    BIG_HANDSOME_QUEUE("big-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,10000L),
 
-    @Getter
-    private String name;
+    MIDDLE_HANDSOME_QUEUE("middle-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,30000L),
 
-    @Getter
+    SMALL_HANDSOME_QUEUE("small-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,60000L);
+
+    private final String name;
+
     private RabbitMqExchangeEnum exchange;
 
-    @Getter
     private long ttl;
 
-    @Getter
     private boolean needDeadLetter;
 
-    @Getter
     private long deadLetterTtl;
 
     RabbitMqQueueEnum(String name,RabbitMqExchangeEnum exchange, long ttl, boolean needDeadLetter, long deadLetterTtl) {
@@ -32,5 +31,25 @@ public enum  RabbitMqQueueEnum {
         this.ttl = ttl;
         this.needDeadLetter = needDeadLetter;
         this.deadLetterTtl = deadLetterTtl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public RabbitMqExchangeEnum getExchange() {
+        return exchange;
+    }
+
+    public long getTtl() {
+        return ttl;
+    }
+
+    public boolean isNeedDeadLetter() {
+        return needDeadLetter;
+    }
+
+    public long getDeadLetterTtl() {
+        return deadLetterTtl;
     }
 }

@@ -1,11 +1,9 @@
 package com.xs.middle.compent.ftd.mq.rabbitmq;
 
+import com.google.common.collect.Maps;
 import com.xs.middle.compent.ftd.constant.RabbitMqExchangeEnum;
 import com.xs.middle.compent.ftd.constant.RabbitMqQueueEnum;
-import org.springframework.amqp.core.Exchange;
-import org.springframework.amqp.core.ExchangeBuilder;
-import org.springframework.amqp.core.ExchangeTypes;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiaos
@@ -27,6 +27,8 @@ public class RabbitMqConfiguration {
 
     private RabbitAdmin rabbitAdmin;
 
+    private static final String DEAD_SUFFIX = "-dead";
+
     @PostConstruct
     protected void init(){
         rabbitAdmin = new RabbitAdmin(connectionFactory);
@@ -37,11 +39,25 @@ public class RabbitMqConfiguration {
     }
 
     private void declareBinding(List<QueueWarpper> queueWarppers) {
-
+        queueWarppers.forEach(item -> {
+            Binding queueBinding = BindingBuilder
+                    .bind(item.getQueue())
+                    .to(ExchangeBuilder.directExchange(item.getExchangeEnum().DEFAULT.getName()).build())
+                    .with(item.getQueue().getName()).noargs();
+            Binding deadQueueBinding = BindingBuilder
+                    .bind(item.getDeadQueue())
+                    .to(ExchangeBuilder.directExchange(item.getExchangeEnum().DEFAULT_DEAD.getName()).build())
+                    .with(item.getDeadQueue().getName()).noargs();
+            rabbitAdmin.declareBinding(queueBinding);
+            rabbitAdmin.declareBinding(deadQueueBinding);
+        });
     }
 
     private void declareQueues(List<QueueWarpper> queueWarppers) {
-
+        queueWarppers.forEach(item -> {
+            rabbitAdmin.declareQueue(item.getQueue());
+            rabbitAdmin.declareQueue(item.getDeadQueue());
+        });
     }
 
     private void declareExchange() {
@@ -59,15 +75,17 @@ public class RabbitMqConfiguration {
 
     private List<QueueWarpper> initQueueMap() {
         List<QueueWarpper> queueList = new ArrayList<>();
+
         RabbitMqQueueEnum[] queueEnums = RabbitMqQueueEnum.values();
         for(RabbitMqQueueEnum queueEnum : queueEnums){
             QueueWarpper warpper = new QueueWarpper();
-            Queue queue = new Queue(queueEnum.getName());
-            warpper.setTtl(queueEnum.getTtl());
+            Map<String,Object> quequArgs = buildQueueArgs(queueEnum);
+            Queue queue = new Queue(queueEnum.getName(),true,false,false,quequArgs);
+
             Queue deadQueue = null;
             if(queueEnum.isNeedDeadLetter()){
-                deadQueue = new Queue(queueEnum.getName());
-                warpper.setDeadLetterTtl(warpper.getDeadLetterTtl());
+                Map<String,Object> deadQueueArgs = buildDeadQueueArgs(queueEnum);
+                deadQueue = new Queue(queueEnum.getName() + DEAD_SUFFIX,true,false,false,deadQueueArgs);
             }
             warpper.setQueue(queue);
             warpper.setDeadQueue(deadQueue);
@@ -75,5 +93,24 @@ public class RabbitMqConfiguration {
             queueList.add(warpper);
         }
         return queueList;
+    }
+
+    private Map<String, Object> buildQueueArgs(RabbitMqQueueEnum queueEnum) {
+        Map<String,Object> args = Maps.newHashMap();
+        if(queueEnum.isNeedDeadLetter()){
+            args.put("x-dead-letter-exchange",RabbitMqExchangeEnum.DEFAULT_DEAD.getName());
+            args.put("x-dead-letter-routing-key",queueEnum.getName()+DEAD_SUFFIX);
+        }
+        return args;
+    }
+
+    private Map<String, Object> buildDeadQueueArgs(RabbitMqQueueEnum queueEnum) {
+        Map<String,Object> args = Maps.newHashMap();
+        if(queueEnum.isNeedDeadLetter()){
+            args.put("x-dead-letter-exchange",RabbitMqExchangeEnum.DEFAULT.getName());
+            args.put("x-dead-letter-routing-key",queueEnum.getName());
+            args.put("x-message-ttl",queueEnum.getDeadLetterTtl());
+        }
+        return args;
     }
 }
