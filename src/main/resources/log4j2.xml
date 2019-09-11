@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--启动项设置为 trace，加载 springboot 启动内部各种详细输出-->
+<Configuration status="ERROR" monitorInterval="30">
+    <properties>
+        <property name="logger.level">${sys:log.level:-info}</property>
+        <property name="log.base">${sys:log.base:-/usr/local/logs/ftd}</property>
+        <property name="log.moduleName">ftd</property>
+    </properties>
+
+    <Loggers>
+        <AsyncRoot level="info">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="FILE.OTHER"/>
+        </AsyncRoot>
+        <AsyncLogger name="com.xs.middle.compent" level="${logger.level}" additivity="false">
+            <appender-ref ref="FILE.DEBUG"/>
+            <appender-ref ref="FILE.INFO"/>
+            <appender-ref ref="FILE.WARN"/>
+            <appender-ref ref="FILE.ERROR"/>
+        </AsyncLogger>
+    </Loggers>
+</Configuration>

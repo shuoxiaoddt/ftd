@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <properties>
+        <property name="log.max.size">50MB</property>        <!-- 日志文件大小 -->
+        <property name="log.min.size">102400</property>        <!-- 日志文件大小 -->
+        <property name="log.max.history">30d</property>       <!-- 配置日志的滚动时间 (天)，会自动清除30天前的日志 -->
+        <property name="log.max.number">500</property>        <!--日志最大序号-->
+        <property name="pattern">%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS}} %-5level [%thread] %X{REQUEST_ID} [%X{traceId},%X{spanId},%X{parentId}] - %l - %msg%n
+        </property>
+        <property name="patternAudit">%msg%n
+        </property>
+    </properties>
+    <Appenders>
+        <Console name="SYSTEM.OUT" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT"
+                                 onMismatch="ACCEPT"/>
+            </Filters>
+            <PatternLayout
+                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %X{REQUEST_ID} [%X{traceId},%X{spanId},%X{parentId}] - %l - %msg%n}{FATAL=Bright Red, ERROR=Bright Magenta, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White}"/>
+        </Console>
+        <RollingFile name="ERROR" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/error.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Filters>
+                <ThresholdFilter level="fatal" onMatch="ACCEPT"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="error" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/error-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="WARN" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/warn.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/warn-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="INFO" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/info.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/info-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="DEBUG" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/debug.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Filters>
+                <ThresholdFilter level="info" onMatch="DENY"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="trace" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/debug-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="OTHER" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/other.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/other-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/other-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="REQUEST" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/requestTime.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/requestTime-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/requestTime-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="1">
+                    <ScriptCondition>
+                        <!--删除空目录-->
+                        <Script name="deldir" language="groovy">
+                            <![CDATA[
+                                import java.nio.file.*;
+                                def result = [];
+                                def calendar = new Date().toCalendar();
+                                calendar.add(Calendar.MONTH, -1);
+                                pathList.each { pathWithAttributes ->
+                                    def relative = pathWithAttributes.path.toString()
+                                    File file = new File(relative);
+                                    if(file.isDirectory() && file.lastModified() < calendar.getTimeInMillis()){
+                                        result.add(pathWithAttributes)
+                                    }
+                                }
+                                statusLogger.info 'SCRIPT: returning ' + result;
+                                result;
+                             ]]>
+                        </Script>
+                    </ScriptCondition>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="BIG.REQUEST" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/bigRequestTime.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/bigRequestTime-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了200 -->
+            <DefaultRolloverStrategy max="200" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/bigRequestTime-*-*.log.gz"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <!-- MQ日志路径 -->
+        <RollingFile name="FILE.MQ"
+                     fileName="${log.base}/${log.moduleName}/mq.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/mq-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="${log.min.size}"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}" fileIndex="max">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/mq-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="SYN" immediateflush="false"
+                     fileName="${log.base}/${log.moduleName}/syn.log"
+                     filePattern="${log.base}/${log.moduleName}/$${date:yyyy-MM}/syn-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}">
+                <Delete basePath="${log.base}/${log.moduleName}" maxDepth="2">
+                    <IfFileName glob="*/syn-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="AUDIT" immediateflush="false"
+                     fileName="${log.base}//audit//audit.log"
+                     filePattern="${log.base}//audit//$${date:yyyy-MM}/syn-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${patternAudit}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="${log.max.size}"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="${log.max.number}">
+                <Delete basePath="${log.base}//audit" maxDepth="2">
+                    <IfFileName glob="*/audit-*-*.log.gz"/>
+                    <IfLastModified age="${log.max.history}"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <Async name="FILE.OTHER" bufferSize="262144" >
+            <appender-ref ref="OTHER" />
+        </Async>
+        <Async name="FILE.ERROR" bufferSize="262144" includeLocation="true">
+            <appender-ref ref="ERROR" />
+        </Async>
+        <Async name="FILE.WARN" bufferSize="262144" >
+            <appender-ref ref="WARN" />
+        </Async>
+        <Async name="FILE.INFO" bufferSize="262144" >
+            <appender-ref ref="INFO" />
+        </Async>
+        <Async name="FILE.DEBUG" bufferSize="262144">
+            <appender-ref ref="DEBUG" />
+        </Async>
+        <Async name="FILE.SYN" bufferSize="262144">
+            <appender-ref ref="SYN" />
+        </Async>
+        <Async name="REQUEST.TIME" bufferSize="262144">
+            <appender-ref ref="REQUEST" />
+        </Async>
+        <Async name="BIG.REQUEST.TIME" bufferSize="262144">
+            <appender-ref ref="BIG.REQUEST" />
+        </Async>
+        <Async name="Console" bufferSize="262144">
+            <appender-ref ref="SYSTEM.OUT" />
+        </Async>
+        <Async name="FILE.AUDIT" bufferSize="262144">
+            <appender-ref ref="AUDIT" />
+        </Async>
+    </Appenders>
+</Configuration>
