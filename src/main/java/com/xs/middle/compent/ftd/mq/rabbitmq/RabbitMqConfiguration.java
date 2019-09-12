@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiaos
@@ -42,11 +41,11 @@ public class RabbitMqConfiguration {
         queueWarppers.forEach(item -> {
             Binding queueBinding = BindingBuilder
                     .bind(item.getQueue())
-                    .to(ExchangeBuilder.directExchange(item.getExchangeEnum().DEFAULT.getName()).build())
+                    .to(ExchangeBuilder.directExchange(RabbitMqExchangeEnum.DEFAULT.getName()).build())
                     .with(item.getQueue().getName()).noargs();
             Binding deadQueueBinding = BindingBuilder
                     .bind(item.getDeadQueue())
-                    .to(ExchangeBuilder.directExchange(item.getExchangeEnum().DEFAULT_DEAD.getName()).build())
+                    .to(ExchangeBuilder.directExchange(RabbitMqExchangeEnum.DEFAULT_DEAD.getName()).build())
                     .with(item.getDeadQueue().getName()).noargs();
             rabbitAdmin.declareBinding(queueBinding);
             rabbitAdmin.declareBinding(deadQueueBinding);

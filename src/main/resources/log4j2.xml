@@ -12,7 +12,7 @@
             <appender-ref ref="Console"/>
             <appender-ref ref="FILE.OTHER"/>
         </AsyncRoot>
-        <AsyncLogger name="com.xs.middle.compent" level="${logger.level}" additivity="false">
+        <AsyncLogger name="com.xs.middle.compent" level="${logger.level}">
             <appender-ref ref="FILE.DEBUG"/>
             <appender-ref ref="FILE.INFO"/>
             <appender-ref ref="FILE.WARN"/>

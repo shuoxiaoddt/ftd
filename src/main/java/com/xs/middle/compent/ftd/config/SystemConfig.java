@@ -9,9 +9,6 @@ import java.util.List;
 
 /**
  * 系统配置类
- *
- * @author wugx
- * @date 2019/7/15 10:19
  */
 public interface SystemConfig {
 
