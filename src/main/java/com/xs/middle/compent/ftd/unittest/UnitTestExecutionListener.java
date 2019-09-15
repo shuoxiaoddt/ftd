@@ -3,12 +3,12 @@ package com.xs.middle.compent.ftd.unittest;
 import com.xs.middle.compent.ftd.util.CompareUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.assertj.core.util.Throwables;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
@@ -33,6 +33,7 @@ import java.util.*;
  */
 @Slf4j
 @Component
+@ConditionalOnClass(org.apache.ibatis.session.SqlSessionFactory.class)
 public class UnitTestExecutionListener extends AbstractTestExecutionListener {
 
     private PlatformTransactionManager txManager;
@@ -117,7 +118,7 @@ public class UnitTestExecutionListener extends AbstractTestExecutionListener {
      * 创建数据库session连接
      */
     private Connection buildConnection(TestContext testContext) throws SQLException {
-        Connection connection = testContext.getApplicationContext().getBean(SqlSessionFactory.class).openSession(false).getConnection();
+        Connection connection = testContext.getApplicationContext().getBean(org.apache.ibatis.session.SqlSessionFactory.class).openSession(false).getConnection();
         connection.setAutoCommit(false);
         return connection;
     }
