@@ -1,9 +1,6 @@
 package com.xs.middle.compent.ftdspringboot.autoconf.springspi;
 
 import com.xs.middle.compent.ftdspringboot.autoconf.LinuxSystem;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.springframework.context.annotation.Bean;
 
 /**
