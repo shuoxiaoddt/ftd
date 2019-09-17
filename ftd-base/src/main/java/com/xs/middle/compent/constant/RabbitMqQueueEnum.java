@@ -1,8 +1,6 @@
 package com.xs.middle.compent.constant;
 
 
-import lombok.Getter;
-
 /**
  * @author xiaos
  * @date 2019/9/3 13:48
@@ -13,7 +11,9 @@ public enum  RabbitMqQueueEnum {
 
     MIDDLE_HANDSOME_QUEUE("middle-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,30000L),
 
-    SMALL_HANDSOME_QUEUE("small-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,60000L);
+    SMALL_HANDSOME_QUEUE("small-handsome-queue",RabbitMqExchangeEnum.DEFAULT,0L,true,0L),
+
+    ZC_DSB_QUEUE("zc-dsb-queue",RabbitMqExchangeEnum.DEFAULT,0L,false,0);
 
     private final String name;
 

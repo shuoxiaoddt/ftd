@@ -1,4 +1,4 @@
-package com.xs.middle.compent.unittest;
+package com.xs.middle.compent.convert;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;

@@ -1,7 +1,7 @@
 package com.xs.middle.compent.util;
 
 import com.thoughtworks.xstream.XStream;
-import com.xs.middle.compent.ftdmiddle.unittest.MyDateConverter;
+import com.xs.middle.compent.convert.MyDateConverter;
 import org.springframework.util.StringUtils;
 
 import java.io.InputStream;

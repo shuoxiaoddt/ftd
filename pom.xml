@@ -18,6 +18,8 @@
         <module>ftd-base</module>
         <module>ftdmybatis-spring-boot-starter</module>
         <module>ftd-unittest</module>
+        <module>ftd-rabbitmq</module>
+        <module>ftd-spring-boot</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

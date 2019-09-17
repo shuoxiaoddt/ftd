@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author xiaos
@@ -44,19 +45,25 @@ public class RabbitMqConfiguration {
                     .bind(item.getQueue())
                     .to(ExchangeBuilder.directExchange(RabbitMqExchangeEnum.DEFAULT.getName()).build())
                     .with(item.getQueue().getName()).noargs();
-            Binding deadQueueBinding = BindingBuilder
-                    .bind(item.getDeadQueue())
-                    .to(ExchangeBuilder.directExchange(RabbitMqExchangeEnum.DEFAULT_DEAD.getName()).build())
-                    .with(item.getDeadQueue().getName()).noargs();
             rabbitAdmin.declareBinding(queueBinding);
-            rabbitAdmin.declareBinding(deadQueueBinding);
+            if(Objects.nonNull(item.getDeadQueue())){
+                Binding deadQueueBinding = BindingBuilder
+                        .bind(item.getDeadQueue())
+                        .to(ExchangeBuilder.directExchange(RabbitMqExchangeEnum.DEFAULT_DEAD.getName()).build())
+                        .with(item.getDeadQueue().getName()).noargs();
+                rabbitAdmin.declareBinding(deadQueueBinding);
+            }
         });
     }
 
     private void declareQueues(List<QueueWarpper> queueWarppers) {
         queueWarppers.forEach(item -> {
-            rabbitAdmin.declareQueue(item.getQueue());
-            rabbitAdmin.declareQueue(item.getDeadQueue());
+            if(Objects.nonNull(item.getQueue())){
+                rabbitAdmin.declareQueue(item.getQueue());
+            };
+            if(Objects.nonNull(item.getDeadQueue())){
+                rabbitAdmin.declareQueue(item.getDeadQueue());
+            }
         });
     }
 
@@ -109,7 +116,9 @@ public class RabbitMqConfiguration {
         if(queueEnum.isNeedDeadLetter()){
             args.put("x-dead-letter-exchange",RabbitMqExchangeEnum.DEFAULT.getName());
             args.put("x-dead-letter-routing-key",queueEnum.getName());
-            args.put("x-message-ttl",queueEnum.getDeadLetterTtl());
+            if(queueEnum.getDeadLetterTtl() > 0L){
+                args.put("x-message-ttl",queueEnum.getDeadLetterTtl());
+            }
         }
         return args;
     }

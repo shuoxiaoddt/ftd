@@ -1,7 +1,7 @@
 package com.xs.middle.compent.util;
 
 import com.alibaba.fastjson.JSONObject;
-import org.assertj.core.util.Lists;
+import com.google.common.collect.Lists;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
