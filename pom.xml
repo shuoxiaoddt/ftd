@@ -16,13 +16,14 @@
     <description>ftd</description>
     <modules>
         <module>ftd-base</module>
-        <module>ftdmybatis-spring-boot-starter</module>
         <module>ftd-unittest</module>
         <module>ftd-rabbitmq</module>
         <module>ftd-spring-boot</module>
         <module>ftd-api</module>
         <module>ftd-provider</module>
         <module>ftd-feign</module>
+        <module>ftd-rxjava</module>
+        <module>ftdmybatis-spring-boot-start</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -37,6 +38,16 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.xs.middle.api</groupId>
+                <artifactId>ftd-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xs.middle.compent</groupId>
+                <artifactId>ftdmybatis-spring-boot-start</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
