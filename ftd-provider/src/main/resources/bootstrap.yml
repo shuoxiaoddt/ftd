@@ -13,7 +13,6 @@ spring:
         instance-id: ${spring.application.name}:${spring.cloud.client.ipaddress}:${server.port}
         query-passing: true
         register: true
-
 management:
   endpoints:
     web:

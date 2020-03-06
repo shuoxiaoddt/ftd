@@ -24,11 +24,20 @@
         <module>ftd-feign</module>
         <module>ftd-rxjava</module>
         <module>ftdmybatis-spring-boot-start</module>
+        <module>ftd-zuul</module>
+        <module>ftd-sleuth</module>
+        <module>ftd-zipkin</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
