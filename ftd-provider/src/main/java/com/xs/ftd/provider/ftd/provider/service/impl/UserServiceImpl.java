@@ -1,6 +1,6 @@
 package com.xs.ftd.provider.ftd.provider.service.impl;
 
-import com.xs.ftd.provider.ftd.provider.service.UserService;
+import com.xs.middle.compent.api.UserService;
 
 /**
  * @author xiaos

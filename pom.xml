@@ -21,6 +21,10 @@
         <module>ftd-rabbitmq</module>
         <module>ftd-spring-boot</module>
         <module>ftd-api</module>
+        <module>ftd-sentinel</module>
+        <module>ftd-provider</module>
+        <module>ftf-demo</module>
+        <module>ftd-agent</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
