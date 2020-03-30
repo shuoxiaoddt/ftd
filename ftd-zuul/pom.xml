@@ -6,12 +6,11 @@
         <groupId>com.xs.middle.compent</groupId>
         <artifactId>ftd</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>com.xs.ftd.provider</groupId>
-    <artifactId>ftd-provider</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>ftd-provider</name>
+    <groupId>com.xs.middle.zuul</groupId>
+    <artifactId>ftd-zuul</artifactId>
+
+    <name>ftd-zuul</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -20,45 +19,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-config</artifactId>
+            <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.xs.middle.api</groupId>
-            <artifactId>ftd-api</artifactId>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.xs.middle.compent</groupId>-->
-<!--            <artifactId>ftdmybatis-spring-boot-start</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-sleuth</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -73,6 +41,7 @@
     </dependencies>
 
 
+
     <build>
         <plugins>
             <plugin>
@@ -81,6 +50,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

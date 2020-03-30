@@ -1,10 +1,12 @@
-package com.xs.ftd.provider.ftd.provider;
+package com.xs.middle.zuul;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FtdProviderApplicationTests {
+class FtdZuulApplicationTests {
 
+    @Test
     void contextLoads() {
     }
 
