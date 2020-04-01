@@ -11,6 +11,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
 
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -53,8 +54,10 @@ public class CharClientServer {
                         .handler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel ch) throws Exception {
-                                ch.pipeline().addLast(new ChatClientMessageSendHandler());
-                                ch.pipeline().addLast(new ChatClientMessageReceHandler());
+                                ch.pipeline()
+                                        .addLast(new StringDecoder())
+                                        .addLast(new ChatClientMessageSendHandler())
+                                        .addLast(new ChatClientMessageReceHandler());
                             }
                         })
                         .option(ChannelOption.SO_KEEPALIVE,true);
